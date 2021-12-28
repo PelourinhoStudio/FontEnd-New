@@ -1,7 +1,6 @@
 import axios from "axios"
 import { parseCookies } from "nookies"
 
-
 const { 'token': token} = parseCookies()
 
 export const api = axios.create({

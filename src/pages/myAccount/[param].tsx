@@ -5,6 +5,7 @@ import {
     Text
 } from "@chakra-ui/react";
 import { useRouter } from "next/router"
+import { AccountDetails } from "../../components/accountDetails/accountDetails";
 import { AccountInfoComp } from "../../components/accountInfoComp/accountInfoComp";
 import { Buttons } from "../../components/buttons/buttons";
 import { MyGalleryComp } from "../../components/myGalleryComp/myGalleryComp";
@@ -39,7 +40,7 @@ export default function Param() {
                             param == 'uploadImage' && <UploadImageForm />
                         }
                         {
-                            param == 'accountInfo' && <Text>php é merda</Text>
+                            param == 'accountDetails' && <AccountDetails />
                         }
                         {
                             param == 'myGallery' && <MyGalleryComp />

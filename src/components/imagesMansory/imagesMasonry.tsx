@@ -17,19 +17,12 @@ export function ImagesMasonry({ data }: any) {
 
     const [images, setImages] = useState([])
 
-    const { 'studio.token': token } = parseCookies()
     const [imagesID, setImagesID] = useState()
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    let config = {
-        headers: {
-            'x-access-token': token
-        }
-    }
-
     useEffect(() => {
         api
-            .get("/images", config)
+            .get("/images")
             .then((response) => setImages(response.data))
             .catch((err) => {
                 console.error("ops! ocorreu um erro " + err)

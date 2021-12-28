@@ -4,6 +4,7 @@ import { setCookie, parseCookies, destroyCookie } from 'nookies'
 import { useRouter } from "next/router"
 
 type User = {
+    _id: string
     email: string,
     firstName: string,
     lastName: string,
@@ -43,8 +44,8 @@ export function AuthProvider({ children }: any) {
                     'x-access-token': token
                 }
             }).then(response => {
-                const { email, firstName, lastName, avatar, userType } = response.data
-                setUser({ email, firstName, lastName, avatar, userType })
+                const { _id, email, firstName, lastName, avatar, userType } = response.data
+                setUser({ _id, email, firstName, lastName, avatar, userType })
             })
         }
     }, [])
@@ -64,8 +65,8 @@ export function AuthProvider({ children }: any) {
                     'x-access-token': response.data
                 }
             }).then(response => {
-                const { email, firstName, lastName, avatar, userType } = response.data
-                setUser({ email, firstName, lastName, avatar, userType })
+                const { _id, email, firstName, lastName, avatar, userType } = response.data
+                setUser({ _id, email, firstName, lastName, avatar, userType })
                 router.push('/')
             })
         } catch (err) {

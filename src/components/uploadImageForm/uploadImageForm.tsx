@@ -1,26 +1,26 @@
-import { 
-    Button, 
-    Center, 
-    Flex, 
-    FormLabel, 
-    HStack, 
-    Input, 
-    Select, 
-    Text, 
-    Textarea, 
-    useToast, 
-    VStack 
+import {
+    Button,
+    HStack,
+    Input,
+    Select,
+    Text,
+    Textarea,
+    useToast,
+    VStack
 } from "@chakra-ui/react";
 import { parseCookies } from "nookies";
 import { useForm } from "react-hook-form";
 import { api } from "../../services/api";
 import { ref, storage, uploadBytesResumable, getDownloadURL } from '../../services/firebase'
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export function UploadImageForm() {
 
     const toast = useToast()
     const { register, handleSubmit, formState: { isSubmitting } } = useForm()
     const { 'studio.token': token } = parseCookies()
+    const { user } = useContext(AuthContext)
 
     let config = {
         headers: {
@@ -42,6 +42,7 @@ export function UploadImageForm() {
                     year: data.year,
                     imageType: data.imageType,
                     imageCDN: res,
+                    author: user._id
                 }
                 await api.post('/admin/images', newImage, config)
                     .then(res => {
@@ -65,52 +66,40 @@ export function UploadImageForm() {
 
     return (
         <>
-            <Flex justify="center" align="flex-start" h="20%">
-                <Center>
-                    <Text fontWeight="bold" fontSize="40px">Upload</Text>
-                </Center>
-            </Flex>
+            <Text fontWeight="bold" fontSize="40px" h="15%">Upload</Text>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <VStack align="center" spacing="30px" h="100%">
-                    <HStack>
+                <VStack spacing={10}>
+                    <HStack w="100%" spacing={10}>
                         <Input
                             bgColor="#FFF"
-                            borderRadius="30px"
-                            w="288px" h="46px"
-                            boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
                             placeholder="Title"
-                            type="text"
+                            borderRadius="60px"
+                            boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
                             {...register("title")}
                         />
                         <Input
                             bgColor="#FFF"
-                            borderRadius="30px"
-                            w="288px"
-                            h="46px"
-                            boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
-                            placeholder="Year"
                             type="date"
+                            borderRadius="60px"
+                            boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
                             {...register("year")}
                         />
                     </HStack>
                     <Textarea
                         bgColor="#FFF"
-                        borderRadius="10px 10px 0 10px"
-                        w="586px"
-                        h="300px"
-                        maxH="300px"
-                        boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
+                        h="50px"
+                        maxH="200px"
                         placeholder="Description"
+                        borderRadius="10px 10px 0 10px"
+                        boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
                         {...register("description")}
                     />
-                    <HStack>
+                    <HStack w="100%" spacing={10}>
                         <Select
                             bgColor="#FFF"
-                            borderRadius="30px"
-                            w="288px"
-                            h="46px"
-                            boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
+                            borderRadius="60px"
                             placeholder="Category"
+                            boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
                             {...register("category")}
                         >
                             <option value='Landscape'>Landscape</option>
@@ -120,83 +109,50 @@ export function UploadImageForm() {
                         </Select>
                         <Select
                             bgColor="#FFF"
-                            borderRadius="30px"
-                            w="288px"
-                            h="46px"
+                            borderRadius="60px"
+                            placeholder="Image Type"
                             boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
-                            placeholder="Type"
                             {...register("imageType")}
                         >
                             <option value='real'>Real</option>
                             <option value='digital'>Digital</option>
                         </Select>
                     </HStack>
-                    <HStack>
+                    <HStack spacing={10}>
                         <Input
                             bgColor="#FFF"
-                            borderRadius="30px"
-                            w="288px"
-                            h="46px"
-                            boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
                             placeholder="Tags"
+                            borderRadius="60px"
+                            boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
                             {...register("tags")}
                         />
                         <Input
                             bgColor="#FFF"
-                            borderRadius="30px"
-                            w="288px"
-                            h="46px"
-                            boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
                             placeholder="Price"
                             type="number"
+                            borderRadius="60px"
+                            boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
                             {...register("price")}
                         />
                     </HStack>
-                    <Flex
-                        h="100%"
-                    >
-                        <FormLabel
-                            h="100%"
-                            textAlign="center"
-                            htmlFor='selectImage'
-                            cursor='pointer'
-                            bgColor="#FFF"
-                            borderRadius="60px"
-                            w="100%"
-                            maxW="158px"
-                            maxH="56px"
-                            boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
-                            display="flex"
-                            justify="center"
-                            align="center"
-                        >
-                            Escolher Imagem
-                        </FormLabel>
+                    <HStack justify="center" w="100%" spacing={10}>
                         <Input
-                            id='selectImage'
-                            bgColor="#FFF"
-                            display="none"
-                            borderRadius="30px"
-                            w="288px"
-                            h="46px"
-                            boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
-                            placeholder="Tags"
                             type="file"
+                            border="none"
                             {...register("images")}
                         />
                         <Button
+                            w="100%"
+                            color="#FFF"
                             type="submit"
                             bgColor="#14387B"
-                            color="#FFF"
                             borderRadius="60px"
-                            w="218px"
-                            h="56px"
                             boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
                             isLoading={isSubmitting}
                         >
                             Upload
                         </Button>
-                    </Flex>
+                    </HStack>
                 </VStack>
             </form>
         </>

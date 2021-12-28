@@ -47,7 +47,7 @@ export function Buttons() {
                 flexDirection="column"
                 justify="center"
                 align="center"
-                onClick={() => router.push('/myAccount/accountInfo')}
+                onClick={() => router.push('/myAccount/accountDetails')}
 
             >
                 <FiSettings size={70} strokeWidth="1" />

@@ -26,6 +26,7 @@ export function ImageModal({ isOpen, open, onClose, id }: any) {
                 headers: { 'x-access-token': token }
             }).then(res => {
                 setImage(res.data)
+                console.log(res.data)
             })
         }
     }, [isOpen])
@@ -49,7 +50,7 @@ export function ImageModal({ isOpen, open, onClose, id }: any) {
                         <Flex>
                             <Avatar src="https://github.com/diogosousa17.png" />
                             <Box mx="10px">
-                                <Text fontWeight="medium">Diogo sousa</Text>
+                                <Text fontWeight="medium">Diogo Sousa</Text>
                                 <Text fontSize="small">Designer</Text>
                             </Box>
                         </Flex>

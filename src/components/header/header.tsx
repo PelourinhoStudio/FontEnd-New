@@ -50,7 +50,7 @@ export function Header() {
                             </MenuButton>
                             <Portal>
                                 <MenuList>
-                                    <Link href="/myAccount/accountInfo" passHref>
+                                    <Link href="/myAccount/accountDetails" passHref>
                                         <MenuItem as="a">Minha Conta</MenuItem>
                                     </Link>
                                     <MenuItem as="button" onClick={signOut}>Sair</MenuItem>
