@@ -1,12 +1,14 @@
-import axios from "axios"
-import { parseCookies } from "nookies"
+import axios from "axios";
+import { parseCookies } from "nookies";
 
-const { 'token': token} = parseCookies()
+const { token: token } = parseCookies();
 
 export const api = axios.create({
-    baseURL: "http://localhost:3333",
-})
+  //http://localhost:3333
+  //https://pelourinhostudio.herokuapp.com/
+  baseURL: "https://pelourinhostudio.herokuapp.com/",
+});
 
-if(token) {
-    api.defaults.headers.common['x-access-token'] =`Bearer ${token}`
+if (token) {
+  api.defaults.headers.common["x-access-token"] = `Bearer ${token}`;
 }

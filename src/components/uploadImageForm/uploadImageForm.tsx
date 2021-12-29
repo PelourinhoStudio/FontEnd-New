@@ -1,160 +1,201 @@
 import {
-    Button,
-    HStack,
-    Input,
-    Select,
-    Text,
-    Textarea,
-    useToast,
-    VStack
+  Button,
+  Center,
+  Flex,
+  FormControl,
+  FormLabel,
+  HStack,
+  Input,
+  Menu,
+  MenuButton,
+  MenuItemOption,
+  MenuList,
+  MenuOptionGroup,
+  Select,
+  Text,
+  Textarea,
+  useToast,
+  VStack,
 } from "@chakra-ui/react";
 import { parseCookies } from "nookies";
 import { useForm } from "react-hook-form";
 import { api } from "../../services/api";
-import { ref, storage, uploadBytesResumable, getDownloadURL } from '../../services/firebase'
-import { useContext } from "react";
+import {
+  ref,
+  storage,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "../../services/firebase";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
+import { AxiosError } from "axios";
 
 export function UploadImageForm() {
+  const toast = useToast();
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm();
+  const { "studio.token": token } = parseCookies();
+  const { user } = useContext(AuthContext);
+  const [categories, setCategories] = useState([]);
 
-    const toast = useToast()
-    const { register, handleSubmit, formState: { isSubmitting } } = useForm()
-    const { 'studio.token': token } = parseCookies()
-    const { user } = useContext(AuthContext)
+  let config = {
+    headers: {
+      "x-access-token": token,
+    },
+  };
 
-    let config = {
-        headers: {
-            'x-access-token': token
-        }
-    }
+  const onSubmit = async (data: any) => {
+    const storageRef = ref(storage, "images/" + data.images[0].name);
+    await uploadBytesResumable(storageRef, data.images[0]);
+    await getDownloadURL(storageRef).then(async (res) => {
+      const newImage = {
+        title: data.title,
+        description: data.description,
+        category: categories,
+        tags: data.tags.split(",").map((tag: string) => tag.trim()),
+        price: data.price,
+        year: data.year,
+        imageType: data.imageType,
+        imageCDN: res,
+        author: user._id,
+      };
+      await api
+        .post("/admin/images", newImage, config)
+        .then((res) => {
+          toast({
+            position: "top-start",
+            isClosable: true,
+            title: "Upload realizado com sucesso!",
+            status: "success",
+          });
+        })
+        .catch((err: AxiosError) => {
+          console.log(err.message);
+          toast({
+            position: "top-start",
+            isClosable: true,
+            title: "Erro ao realizar upload Tente novamente mais tarde.",
+            status: "error",
+          });
+        });
+    });
+  };
 
-    const onSubmit = async (data: any) => {
-        const storageRef = ref(storage, 'images/' + data.images[0].name);
-        await uploadBytesResumable(storageRef, data.images[0]);
-        await getDownloadURL(storageRef)
-            .then(async (res) => {
-                const newImage = {
-                    title: data.title,
-                    description: data.description,
-                    category: [data.category],
-                    tags: data.tags,
-                    price: data.price,
-                    year: data.year,
-                    imageType: data.imageType,
-                    imageCDN: res,
-                    author: user._id
-                }
-                await api.post('/admin/images', newImage, config)
-                    .then(res => {
-                        toast({
-                            position: 'top-start',
-                            isClosable: true,
-                            title: 'Upload realizado com sucesso!',
-                            status: 'success',
-                        })
-                    })
-                    .catch(err => {
-                        toast({
-                            position: 'top-start',
-                            isClosable: true,
-                            title: 'Erro ao realizar upload Tente novamente mais tarde.',
-                            status: 'error',
-                        })
-                    })
-            })
-    }
+  return (
+    <>
+      <Flex direction='column' alignItems='center'>
+        <Text fontWeight='bold' fontSize='40px' h='15%' my='8'>
+          Upload
+        </Text>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <VStack spacing={8}>
+            <HStack w='100%' spacing={10}>
+              <Input
+                bgColor='#FFF'
+                placeholder='Title'
+                borderRadius='8'
+                boxShadow='rgba(0, 0, 0, 0.16) 0px 1px 4px'
+                isRequired
+                {...register("title")}
+              />
+              <Input
+                bgColor='#FFF'
+                type='date'
+                borderRadius='8'
+                boxShadow='rgba(0, 0, 0, 0.16) 0px 1px 4px'
+                isRequired
+                {...register("year")}
+              />
+            </HStack>
+            <Textarea
+              bgColor='#FFF'
+              h='50px'
+              maxH='200px'
+              placeholder='Description'
+              borderRadius='10px 10px 0 10px'
+              boxShadow='rgba(0, 0, 0, 0.16) 0px 1px 4px'
+              isRequired
+              {...register("description")}
+            />
+            <HStack w='100%' spacing={10}>
+              <Menu closeOnSelect={false}>
+                <MenuButton
+                  as={Button}
+                  w='150px'
+                  bgColor='white'
+                  boxShadow='rgba(0, 0, 0, 0.16) 0px 1px 4px'
+                  isRequired>
+                  Category
+                </MenuButton>
+                <MenuList>
+                  <MenuOptionGroup
+                    type='checkbox'
+                    onChange={(e: any) => {
+                      setCategories(e);
+                    }}>
+                    <MenuItemOption value='landscape'>Landscape</MenuItemOption>
+                    <MenuItemOption value='wallpaper'>Wallpaper</MenuItemOption>
+                    <MenuItemOption value='nature'>Nature</MenuItemOption>
+                    <MenuItemOption value='drawing'>Drawing</MenuItemOption>
+                  </MenuOptionGroup>
+                </MenuList>
+              </Menu>
+              <Select
+                bgColor='#FFF'
+                borderRadius='8'
+                placeholder='Image Type'
+                boxShadow='rgba(0, 0, 0, 0.16) 0px 1px 4px'
+                {...register("imageType")}
+                isRequired>
+                <option value='real'>Real</option>
+                <option value='digital'>Digital</option>
+              </Select>
+            </HStack>
+            <HStack spacing={10}>
+              <Input
+                bgColor='#FFF'
+                placeholder='Tags (dividas por vírgula)'
+                borderRadius='8'
+                boxShadow='rgba(0, 0, 0, 0.16) 0px 1px 4px'
+                {...register("tags")}
+                isRequired
+              />
+              <Input
+                bgColor='#FFF'
+                placeholder='Price'
+                type='number'
+                borderRadius='8'
+                boxShadow='rgba(0, 0, 0, 0.16) 0px 1px 4px'
+                {...register("price")}
+                isRequired
+              />
+            </HStack>
+            <HStack justify='center' w='100%' spacing={10}>
+              <Input
+                type='file'
+                id='images'
+                border='none'
+                {...register("images")}
+                isRequired
+              />
 
-    return (
-        <>
-            <Text fontWeight="bold" fontSize="40px" h="15%">Upload</Text>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <VStack spacing={10}>
-                    <HStack w="100%" spacing={10}>
-                        <Input
-                            bgColor="#FFF"
-                            placeholder="Title"
-                            borderRadius="60px"
-                            boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
-                            {...register("title")}
-                        />
-                        <Input
-                            bgColor="#FFF"
-                            type="date"
-                            borderRadius="60px"
-                            boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
-                            {...register("year")}
-                        />
-                    </HStack>
-                    <Textarea
-                        bgColor="#FFF"
-                        h="50px"
-                        maxH="200px"
-                        placeholder="Description"
-                        borderRadius="10px 10px 0 10px"
-                        boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
-                        {...register("description")}
-                    />
-                    <HStack w="100%" spacing={10}>
-                        <Select
-                            bgColor="#FFF"
-                            borderRadius="60px"
-                            placeholder="Category"
-                            boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
-                            {...register("category")}
-                        >
-                            <option value='Landscape'>Landscape</option>
-                            <option value='Wallpapper'>Wallpapper</option>
-                            <option value='Nature'>Nature</option>
-                            <option value='Drawing'>Drawing</option>
-                        </Select>
-                        <Select
-                            bgColor="#FFF"
-                            borderRadius="60px"
-                            placeholder="Image Type"
-                            boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
-                            {...register("imageType")}
-                        >
-                            <option value='real'>Real</option>
-                            <option value='digital'>Digital</option>
-                        </Select>
-                    </HStack>
-                    <HStack spacing={10}>
-                        <Input
-                            bgColor="#FFF"
-                            placeholder="Tags"
-                            borderRadius="60px"
-                            boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
-                            {...register("tags")}
-                        />
-                        <Input
-                            bgColor="#FFF"
-                            placeholder="Price"
-                            type="number"
-                            borderRadius="60px"
-                            boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
-                            {...register("price")}
-                        />
-                    </HStack>
-                    <HStack justify="center" w="100%" spacing={10}>
-                        <Input
-                            type="file"
-                            border="none"
-                            {...register("images")}
-                        />
-                        <Button
-                            w="100%"
-                            color="#FFF"
-                            type="submit"
-                            bgColor="#14387B"
-                            borderRadius="60px"
-                            boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
-                            isLoading={isSubmitting}
-                        >
-                            Upload
-                        </Button>
-                    </HStack>
-                </VStack>
-            </form>
-        </>
-    )
+              <Button
+                w='100%'
+                color='#FFF'
+                type='submit'
+                bgColor='#14387B'
+                borderRadius='8'
+                boxShadow='rgba(0, 0, 0, 0.16) 0px 1px 4px'
+                isLoading={isSubmitting}>
+                Upload
+              </Button>
+            </HStack>
+          </VStack>
+        </form>
+      </Flex>
+    </>
+  );
 }
