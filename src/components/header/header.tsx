@@ -50,7 +50,7 @@ export function Header() {
               </Flex>
             </MenuButton>
             <Portal>
-              <MenuList>
+              <MenuList zIndex={1000}>
                 <Link href='/myAccount/accountDetails' passHref>
                   <MenuItem as='a'>Minha Conta</MenuItem>
                 </Link>

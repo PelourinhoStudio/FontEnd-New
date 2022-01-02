@@ -1,22 +1,42 @@
 import { Container, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { parseCookies } from "nookies";
+import { useEffect, useState } from "react";
 import { AccountDetails } from "../../components/accountDetails/accountDetails";
 import { AccountInfoComp } from "../../components/accountInfoComp/accountInfoComp";
 import { Buttons } from "../../components/buttons/buttons";
-import { MyGalleryComp } from "../../components/myGalleryComp/myGalleryComp";
+import { GalleryComp } from "../../components/GalleryComp";
 import { UploadImageForm } from "../../components/uploadImageForm/uploadImageForm";
 import { WhiteArea } from "../../components/whiteArea/whiteArea";
+import { api } from "../../services/api";
 
 export default function Param() {
   const router = useRouter();
   let { param } = router.query;
+  const [images, setImages] = useState([]);
+  const { "studio.token": token } = parseCookies();
+
+  useEffect(() => {
+    api
+      .get("/me/images", {
+        headers: {
+          "x-access-token": token,
+        },
+      })
+      .then((response) => {
+        setImages(response.data);
+      })
+      .catch((err) => {
+        console.error("ops! ocorreu um erro " + err);
+      });
+  }, []);
 
   return (
     <>
       <Container maxW='full'>
         {param == "uploadImage" && <UploadImageForm />}
         {param == "accountDetails" && <AccountDetails />}
-        {param == "myGallery" && <MyGalleryComp />}
+        {param == "myGallery" && <GalleryComp imageList={images} />}
       </Container>
     </>
   );
