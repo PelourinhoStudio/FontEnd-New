@@ -45,7 +45,7 @@ export function Header() {
             <MenuButton borderRadius='lg' mr='10px'>
               <Flex align='center'>
                 <Text>{user.firstName + " " + user.lastName}</Text>
-                <Avatar m='6px' name={user.firstName} />
+                <Avatar m='6px' name={user.avatar} />
                 <FiChevronDown />
               </Flex>
             </MenuButton>

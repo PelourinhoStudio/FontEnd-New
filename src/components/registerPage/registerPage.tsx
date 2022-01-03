@@ -5,7 +5,7 @@ import { api } from "../../services/api";
 export function RegisterPage() {
 
     const toast = useToast()
-    const { register, handleSubmit } = useForm()
+    const { register, handleSubmit, formState: { isSubmitting } } = useForm()
 
     const onSubmit = async (data: any) => {
         const newUser = {
@@ -105,6 +105,7 @@ export function RegisterPage() {
                                     color="#fff"
                                     borderRadius="60px"
                                     type="submit"
+                                    isLoading={isSubmitting}
                                 >
                                     Entrar
                                 </Button>

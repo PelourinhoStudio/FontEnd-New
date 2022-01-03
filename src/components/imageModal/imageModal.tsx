@@ -10,6 +10,7 @@ import {
   ModalOverlay,
   SimpleGrid,
   Text,
+  Center
 } from "@chakra-ui/react";
 import { parseCookies } from "nookies";
 import React, { useEffect, useState } from "react";
@@ -19,6 +20,8 @@ import { api } from "../../services/api";
 export function ImageModal({ isOpen, open, onClose, id }: any) {
   const { "studio.token": token } = parseCookies();
   const [image, setImage]: any = useState({});
+  const [tags, setTags]: any = useState([]);
+  const [categories, setCategories]: any = useState([]);
 
   useEffect(() => {
     if (isOpen != false) {
@@ -28,7 +31,8 @@ export function ImageModal({ isOpen, open, onClose, id }: any) {
         })
         .then((res) => {
           setImage(res.data);
-          console.log(res.data);
+          setTags(res.data.tags)
+          setCategories(res.data.category)
         });
     }
   }, [isOpen]);
@@ -38,13 +42,13 @@ export function ImageModal({ isOpen, open, onClose, id }: any) {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent maxW='96rem' h='70rem' mx='16'>
-          <Image
-            src={image.imageCDN}
-            objectFit='cover'
-            maxH='36rem'
-            w='100%'
-            h='100%'
-          />
+          <Center>
+            <Image
+              src={image.imageCDN}
+              objectFit='cover'
+              h='600px'
+            />
+          </Center>
           <Flex mx='20px' mt='20px' justify='space-between'>
             <Flex>
               <Avatar src='https://github.com/diogosousa17.png' />
@@ -68,9 +72,9 @@ export function ImageModal({ isOpen, open, onClose, id }: any) {
             <Text fontWeight='medium' ml='20px' mt='20px'>
               Categoria:
             </Text>
-            <Text mx='2' mt='20px'>
-              {image.category}
-            </Text>
+            {
+              categories.map((category: any) => <Text mx='2' mt='20px'>{category}</Text>)
+            }
           </Flex>
           <Flex>
             <Text fontWeight='medium' ml='20px' mt='20px'>
@@ -94,9 +98,15 @@ export function ImageModal({ isOpen, open, onClose, id }: any) {
           <Flex mx='20px' justify='flex-end' h='100%' flexDirection='column'>
             <Text fontWeight='medium'>Tags:</Text>
             <SimpleGrid columns={10} spacing={5} w='100%'>
-              <Box bgColor='gray.200' borderRadius='md' mb='10px'>
-                <Text textAlign='center'>{image.tags}</Text>
-              </Box>
+              {
+                tags.map((tag: any) => (
+                  <Box bgColor='gray.200' borderRadius='md' mb='10px'>
+                    <Text textAlign='center'>
+                      {tag}
+                    </Text>
+                  </Box>
+                ))
+              }
             </SimpleGrid>
           </Flex>
         </ModalContent>

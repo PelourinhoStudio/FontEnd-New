@@ -12,7 +12,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 
 export function LoginPage() {
 
-    const { register, handleSubmit } = useForm()
+    const { register, handleSubmit, formState: { isSubmitting } } = useForm()
     const { signIn } = useContext(AuthContext)
 
     async function handleSignIn(data: any) {
@@ -76,7 +76,7 @@ export function LoginPage() {
                             </Flex>
                         </Center>
                     </form>
-                    <Text m="10px" color="grey">Recuperar Password</Text>
+                    <Text m="10px" color="grey" isLoading={isSubmitting}>Recuperar Password</Text>
                 </Flex>
             </Flex>
         </>
