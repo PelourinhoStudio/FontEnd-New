@@ -48,22 +48,33 @@ export function UploadImageForm() {
   };
 
   const onSubmit = async (data: any) => {
-    const storageRef = ref(storage, "images/" + data.images[0].name);
-    await uploadBytesResumable(storageRef, data.images[0]);
-    await getDownloadURL(storageRef).then(async (res) => {
-      const newImage = {
-        title: data.title,
-        description: data.description,
-        category: categories,
-        tags: data.tags.split(",").map((tag: string) => tag.trim()),
-        price: data.price,
-        year: data.year,
-        imageType: data.imageType,
-        imageCDN: res,
-        author: user._id,
-      };
+    let imageFiles: any = [data.images][0];
+
+    let uploadPromises: any[] = [];
+
+    uploadPromises.push(
+      [...imageFiles].map(async (file: any) => {
+        const storageRef = ref(storage, "images/" + file.name);
+        await uploadBytesResumable(storageRef, file);
+        const downloadURL = await getDownloadURL(storageRef);
+
+        return downloadURL;
+      })
+    );
+
+    await Promise.all(uploadPromises[0]).then(
+      (values: any) => (data.imageCDN = values)
+    );
+
+    let imageLinks = data.imageCDN;
+    data.imageCDN = "";
+
+    imageLinks.map(async (imageLink: any) => {
+      data.imageCDN = imageLink;
+      data.author = user._id;
+
       await api
-        .post("/admin/images", newImage, config)
+        .post("/admin/images", data, config)
         .then((res) => {
           toast({
             position: "top-start",
@@ -175,6 +186,7 @@ export function UploadImageForm() {
             </HStack>
             <HStack justify='center' w='100%' spacing={10}>
               <Input
+                multiple
                 type='file'
                 id='images'
                 border='none'
