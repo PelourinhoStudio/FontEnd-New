@@ -48,6 +48,8 @@ export function UploadImageForm() {
   };
 
   const onSubmit = async (data: any) => {
+    data.tags = data.tags.split(",").map((tag: string) => tag.trim());
+
     let imageFiles: any = [data.images][0];
 
     let uploadPromises: any[] = [];
@@ -68,10 +70,12 @@ export function UploadImageForm() {
 
     let imageLinks = data.imageCDN;
     data.imageCDN = "";
+    delete data.images;
 
     imageLinks.map(async (imageLink: any) => {
       data.imageCDN = imageLink;
       data.author = user._id;
+      data.category = categories;
 
       await api
         .post("/admin/images", data, config)
