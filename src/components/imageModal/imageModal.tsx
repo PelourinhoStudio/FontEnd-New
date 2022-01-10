@@ -47,6 +47,7 @@ export function ImageModal({ isOpen, open, onClose, id }: any) {
               src={image.imageCDN}
               objectFit='cover'
               h='600px'
+              mt="10px"
             />
           </Center>
           <Flex mx='20px' mt='20px' justify='space-between'>

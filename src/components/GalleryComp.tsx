@@ -63,7 +63,7 @@ export function GalleryComp({ imageList, haveHeader }: any) {
   return (
     <>
       {haveHeader && (
-        <Image src={"/image.png"} w='100%' h='100%' maxH='700px' alt='image' />
+        <Image src={"/image.png"} w='100%' h='100%' maxH='700px' alt='image' objectFit={"cover"} />
       )}
       <Box
         padding={4}
