@@ -23,13 +23,28 @@ export function Header() {
 
   const { user, isAuthenticated, signOut } = useContext(AuthContext);
   const [categories, setCategories] = useState([])
+  const categoriesArray = [
+    "nature",
+    "wallpaper",
+    "landscape",
+    "architecture",
+    "fashion",
+    "foods & drinks",
+    "experimental",
+    "film",
+    "people",
+    "travel",
+    "animals",
+    "arts & culture",
+    "history",
+    "athletics",
+  ]
 
   const [ref] = useKeenSlider<HTMLDivElement>({
     loop: true,
     mode: "free-snap",
     slides: {
-      perView: 3,
-      spacing: 15,
+      perView: 14,
     },
   })
 
@@ -99,8 +114,10 @@ export function Header() {
           <Flex>
             <div ref={ref} className="keen-slider">
               {
-                categories.map((categorie: any) => (
-                  <div className="keen-slider__slide number-slide1">{categorie}</div>
+                categoriesArray.map((category: any) => (
+                  <Link href={`/category/${category}`}>
+                    <div className="keen-slider__slide number-slide1" style={{textTransform: "capitalize", cursor: "pointer"}}>{category}</div>
+                  </Link>
                 ))
               }
             </div>

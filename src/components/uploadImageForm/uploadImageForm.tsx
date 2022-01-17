@@ -136,7 +136,7 @@ export function UploadImageForm() {
               {...register("description")}
             />
             <HStack w='100%' spacing={10}>
-              <Menu closeOnSelect={false}>
+              <Menu closeOnSelect={false} placement="left">
                 <MenuButton
                   as={Button}
                   w='150px'
@@ -154,7 +154,17 @@ export function UploadImageForm() {
                     <MenuItemOption value='landscape'>Landscape</MenuItemOption>
                     <MenuItemOption value='wallpaper'>Wallpaper</MenuItemOption>
                     <MenuItemOption value='nature'>Nature</MenuItemOption>
-                    <MenuItemOption value='drawing'>Drawing</MenuItemOption>
+                    <MenuItemOption value='architecture'>Architecture</MenuItemOption>
+                    <MenuItemOption value='fashion'>Fashion</MenuItemOption>
+                    <MenuItemOption value='foods & drinks'>Foods & Drinks</MenuItemOption>
+                    <MenuItemOption value='experimental'>Experimental</MenuItemOption>
+                    <MenuItemOption value='film'>Film</MenuItemOption>
+                    <MenuItemOption value='people'>People</MenuItemOption>
+                    <MenuItemOption value='travel'>Travel</MenuItemOption>
+                    <MenuItemOption value='animals'>Animals</MenuItemOption>
+                    <MenuItemOption value='arts & culture'>Arts & Culture</MenuItemOption>
+                    <MenuItemOption value='history'>History</MenuItemOption>
+                    <MenuItemOption value='athletics'>Athletics</MenuItemOption>
                   </MenuOptionGroup>
                 </MenuList>
               </Menu>
