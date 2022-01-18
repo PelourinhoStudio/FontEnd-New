@@ -1,13 +1,10 @@
-import { Container, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
+import { Container } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
 import { AccountDetails } from "../../components/accountDetails/accountDetails";
-import { AccountInfoComp } from "../../components/accountInfoComp/accountInfoComp";
-import { Buttons } from "../../components/buttons/buttons";
 import { GalleryComp } from "../../components/GalleryComp";
 import { UploadImageForm } from "../../components/uploadImageForm/uploadImageForm";
-import { WhiteArea } from "../../components/whiteArea/whiteArea";
 import { api } from "../../services/api";
 
 export default function Param() {

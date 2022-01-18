@@ -37,7 +37,7 @@ type Image = {
   author: Author;
 };
 
-export function GalleryComp({ imageList, haveHeader }: any) {
+export function GalleryComp({ imageList }: any) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [imagesID, setImagesID] = useState();
 
@@ -62,9 +62,9 @@ export function GalleryComp({ imageList, haveHeader }: any) {
 
   return (
     <>
-      {haveHeader && (
+      {/* {haveHeader && (
         <Image src={"/image.png"} w='100%' h='100%' maxH='700px' alt='image' objectFit={"cover"} />
-      )}
+      )} */}
       <Box
         padding={4}
         w='100%'

@@ -74,14 +74,14 @@ export function ImageModal({ isOpen, open, onClose, id }: any) {
               Categoria:
             </Text>
             {
-              categories.map((category: any) => <Text mx='2' mt='20px'>{category}</Text>)
+              categories.map((category: any) => <Text mx='2' mt='20px' textTransform={"capitalize"}>{category}</Text>)
             }
           </Flex>
           <Flex>
             <Text fontWeight='medium' ml='20px' mt='20px'>
               Tipo de Imagem:
             </Text>
-            <Text mx='2' mt='20px'>
+            <Text mx='2' mt='20px' textTransform={"capitalize"}>
               {image.imageType}
             </Text>
           </Flex>
