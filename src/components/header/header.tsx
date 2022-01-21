@@ -250,6 +250,9 @@ export function Header() {
                         <Link href='/myAccount/myGallery' passHref>
                           <MenuItem as='a'>Minha Galeria</MenuItem>
                         </Link>
+                          <Link href='/myAccount/favorites' passHref>
+                            <MenuItem as='a'>Favoritos</MenuItem>
+                          </Link>
                         <MenuItem as='button' onClick={signOut}>
                           Sair
                         </MenuItem>

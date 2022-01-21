@@ -100,7 +100,6 @@ export function GalleryComp({ imageList }: any) {
                   }}>
                   <Flex alignItems='center'>
                     <Avatar mr='2' src={image.author.avatar} />
-
                     <Text>
                       {image.author.firstName + " " + image.author.lastName}
                     </Text>

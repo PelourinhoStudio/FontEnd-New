@@ -70,13 +70,14 @@ export function LoginPage() {
                                     color="#fff"
                                     borderRadius="60px"
                                     type="submit"
+                                    isLoading={isSubmitting}
                                 >
                                     Entrar
                                 </Button>
                             </Flex>
                         </Center>
                     </form>
-                    <Text m="10px" color="grey" isLoading={isSubmitting}>Recuperar Password</Text>
+                    <Text m="10px" color="grey">Recuperar Password</Text>
                 </Flex>
             </Flex>
         </>

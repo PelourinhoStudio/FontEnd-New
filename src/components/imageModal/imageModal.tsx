@@ -16,6 +16,7 @@ import { parseCookies } from "nookies";
 import React, { useEffect, useState } from "react";
 import { FiHeart } from "react-icons/fi";
 import { api } from "../../services/api";
+import { FavoriteButton } from "../favoriteButton/favoriteButton";
 
 export function ImageModal({ isOpen, open, onClose, id }: any) {
   const { "studio.token": token } = parseCookies();
@@ -58,9 +59,7 @@ export function ImageModal({ isOpen, open, onClose, id }: any) {
                 <Text fontSize='small'>Designer</Text>
               </Box>
             </Flex>
-            <Button mr='5px' bgColor='#14387B' color='#FFF'>
-              <FiHeart />
-            </Button>
+            <FavoriteButton />
           </Flex>
           <Flex justify='space-between' mx='20px'>
             <Text fontSize='4xl'>{image.title}</Text>

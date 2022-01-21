@@ -6,6 +6,7 @@ import { AccountDetails } from "../../components/accountDetails/accountDetails";
 import { GalleryComp } from "../../components/GalleryComp";
 import { UploadImageForm } from "../../components/uploadImageForm/uploadImageForm";
 import { api } from "../../services/api";
+import Favorites from "../favorites";
 
 export default function Param() {
   const router = useRouter();
@@ -34,6 +35,7 @@ export default function Param() {
         {param == "uploadImage" && <UploadImageForm />}
         {param == "accountDetails" && <AccountDetails />}
         {param == "myGallery" && <GalleryComp imageList={images} />}
+        {param == "favorites" && <Favorites />}
       </Container>
     </>
   );
