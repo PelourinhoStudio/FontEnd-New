@@ -59,7 +59,7 @@ export function ImageModal({ isOpen, open, onClose, id }: any) {
                 <Text fontSize='small'>Designer</Text>
               </Box>
             </Flex>
-            <FavoriteButton />
+            <FavoriteButton id={id}/>
           </Flex>
           <Flex justify='space-between' mx='20px'>
             <Text fontSize='4xl'>{image.title}</Text>
