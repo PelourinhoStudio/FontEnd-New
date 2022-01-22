@@ -190,14 +190,32 @@ export function Header() {
                         <Avatar m='6px' name={user.avatar} src={user.avatar} />
                         <Text>{user.firstName + " " + user.lastName}</Text>
                       </Flex>
-                      <Spacer />
-                      <IconButton
-                        aria-label='Log Out'
-                        bgColor='#FFF'
-                        colorScheme={"#FFF"}
-                        icon={<BiLogOut size={25} color='black' />}
-                        onClick={signOut}
-                      />
+
+                      <Portal>
+                        <MenuList zIndex={1000}>
+                          <MenuItem as='a'>
+                            <Box
+                              as={"button"}
+                              onClick={() =>
+                                router.push(`/myAccount/accountDetails`)
+                              }>
+                              Minha Conta
+                            </Box>
+                          </MenuItem>
+                          <Link href='/myAccount/uploadImage' passHref>
+                            <MenuItem as='a'>Adicionar Imagem</MenuItem>
+                          </Link>
+                          <Link href='/myAccount/myGallery' passHref>
+                            <MenuItem as='a'>Minha Galeria</MenuItem>
+                          </Link>
+                          <Link href='/myAccount/favorites' passHref>
+                            <MenuItem as='a'>Favoritos</MenuItem>
+                          </Link>
+                          <MenuItem as='button' onClick={signOut}>
+                            Sair
+                          </MenuItem>
+                        </MenuList>
+                      </Portal>
                     </Flex>
                   </>
                 ) : (

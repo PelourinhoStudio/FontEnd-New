@@ -1,28 +1,59 @@
-import { 
-    Avatar, 
-    Button, 
-    Center, 
-    FormControl, 
-    FormLabel, 
-    HStack, 
-    Input, 
-    Text, 
-    VStack 
+import {
+    Avatar,
+    Button,
+    Center,
+    FormControl,
+    FormLabel,
+    HStack,
+    Input,
+    Text,
+    useToast,
+    VStack
 } from "@chakra-ui/react";
+import { parseCookies } from "nookies";
 import { useForm } from "react-hook-form";
+import { api } from "../../services/api";
+import { ref, storage, uploadBytesResumable, getDownloadURL } from "../../services/firebase";
+
 
 export function AccountDetails() {
 
-    const { register, handleSubmit } = useForm()
+    const { register, handleSubmit, formState: { isSubmitting } } = useForm()
+    const { 'studio.token': token } = parseCookies()
+    const toast = useToast()
 
-    const onSubmit = (data: any) => {
-        const alterUser = {
-            avatar: data.avatar,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email
-        }
-        console.log(alterUser)
+    const onSubmit = async (data: any) => {
+        const storageRef = ref(storage, "avatar/" + data.avatar[0].name)
+        await uploadBytesResumable(storageRef, data.avatar[0])
+        await getDownloadURL(storageRef).then(async (res) => {
+            const alterUser = {
+                avatar: res,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                email: data.email
+            }
+            await api.put(`/me/edit`, alterUser, {
+                headers: {
+                    'x-access-token': token
+                }
+            })
+                .then(res => {
+                    toast({
+                        position: 'top-start',
+                        isClosable: true,
+                        title: 'Dados alterado com sucesso!',
+                        status: 'success',
+                    })
+                }).catch(err => {
+                    toast({
+                        position: 'top-start',
+                        isClosable: true,
+                        title: 'Erro ao alterar dados. Tente novamente mais tarde',
+                        status: 'error',
+                    })
+                })
+        })
+
     }
 
     return (
@@ -34,15 +65,6 @@ export function AccountDetails() {
                         src={"https://github.com/diogosousa17.png"}
                         size={"2xl"}
                     />
-                    <Center>
-                        <FormControl>
-                            <FormLabel>Alterar Avatar</FormLabel>
-                            <Input
-                                type="file"
-                                {...register("avatar")}
-                            />
-                        </FormControl>
-                    </Center>
                     <HStack>
                         <FormControl>
                             <FormLabel>Primeiro Nome</FormLabel>
@@ -67,14 +89,16 @@ export function AccountDetails() {
                                 {...register("email")}
                             />
                         </FormControl>
-                        {/* <FormControl>
-                            <FormLabel>Qualquer Coisa</FormLabel>
+                        <FormControl>
+                            <FormLabel>Alterar Avatar</FormLabel>
                             <Input
                                 boxShadow='rgba(0, 0, 0, 0.16) 0px 1px 4px'
+                                type="file"
+                                {...register("avatar")}
                             />
-                        </FormControl> */}
+                        </FormControl>
                     </HStack>
-                    <Button bgColor='#14387B' color="#FFF" type={"submit"}>Alterar Dados</Button>
+                    <Button bgColor='#14387B' color="#FFF" type={"submit"} isLoading={isSubmitting}>Alterar Dados</Button>
                 </VStack>
             </form>
         </>
