@@ -241,18 +241,16 @@ export function Header() {
                     </MenuButton>
                     <Portal>
                       <MenuList zIndex={1000}>
-                        <Link href='/myAccount/accountDetails' passHref>
-                          <MenuItem as='a'>Minha Conta</MenuItem>
-                        </Link>
+                        <MenuItem as='a'><Box as={"button"} onClick={() => router.push(`/myAccount/accountDetails`)}>Minha Conta</Box></MenuItem>
                         <Link href='/myAccount/uploadImage' passHref>
                           <MenuItem as='a'>Adicionar Imagem</MenuItem>
                         </Link>
                         <Link href='/myAccount/myGallery' passHref>
                           <MenuItem as='a'>Minha Galeria</MenuItem>
                         </Link>
-                          <Link href='/myAccount/favorites' passHref>
-                            <MenuItem as='a'>Favoritos</MenuItem>
-                          </Link>
+                        <Link href='/myAccount/favorites' passHref>
+                          <MenuItem as='a'>Favoritos</MenuItem>
+                        </Link>
                         <MenuItem as='button' onClick={signOut}>
                           Sair
                         </MenuItem>
