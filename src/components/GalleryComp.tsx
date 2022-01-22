@@ -9,10 +9,12 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { parseCookies } from "nookies";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { api } from "../services/api";
 import { AiOutlineLike, AiOutlineDislike } from "react-icons/ai";
 import { ImageModal } from "./imageModal/imageModal";
+import { AuthContext } from "../contexts/AuthContext";
+import { useRouter } from "next/router";
 
 type Author = {
   _id: string;
@@ -40,6 +42,8 @@ type Image = {
 export function GalleryComp({ imageList }: any) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [imagesID, setImagesID] = useState();
+  const { isAuthenticated } = useContext(AuthContext)
+  const router = useRouter()
 
   const { "studio.token": token } = parseCookies();
 
@@ -49,15 +53,19 @@ export function GalleryComp({ imageList }: any) {
   }
 
   const handleLike = (id: string) => {
-    api.put(
-      `/me/images/like/${id}`,
-      {},
-      {
-        headers: {
-          "x-access-token": token,
-        },
-      }
-    );
+    if (isAuthenticated) {
+      api.put(
+        `/me/images/like/${id}`,
+        {},
+        {
+          headers: {
+            "x-access-token": token,
+          },
+        }
+      );
+    } else {
+      router.push('/login')
+    }
   };
 
   return (

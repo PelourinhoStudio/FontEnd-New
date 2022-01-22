@@ -9,6 +9,7 @@ import { parseCookies } from "nookies";
 export function FavoriteButton({id} : any) {
 
   const [isFavorite, setisFavorite] = useState(false)
+  
     useEffect(() => {
       const {"studio.token" : token} : any = parseCookies()
       api.get("/me/images/favorites",  {headers:{"x-access-token" : token}})

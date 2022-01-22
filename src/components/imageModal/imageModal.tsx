@@ -13,8 +13,9 @@ import {
   Center
 } from "@chakra-ui/react";
 import { parseCookies } from "nookies";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FiHeart } from "react-icons/fi";
+import { AuthContext } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
 import { FavoriteButton } from "../favoriteButton/favoriteButton";
 
@@ -23,6 +24,7 @@ export function ImageModal({ isOpen, open, onClose, id }: any) {
   const [image, setImage]: any = useState({});
   const [tags, setTags]: any = useState([]);
   const [categories, setCategories]: any = useState([]);
+  const { isAuthenticated } = useContext(AuthContext)
 
   useEffect(() => {
     if (isOpen != false) {
@@ -59,7 +61,14 @@ export function ImageModal({ isOpen, open, onClose, id }: any) {
                 <Text fontSize='small'>Designer</Text>
               </Box>
             </Flex>
-            <FavoriteButton id={id}/>
+            {
+              isAuthenticated ? (
+                <FavoriteButton id={id} />
+              ) : (
+                <>
+                </>
+              )
+            }
           </Flex>
           <Flex justify='space-between' mx='20px'>
             <Text fontSize='4xl'>{image.title}</Text>
