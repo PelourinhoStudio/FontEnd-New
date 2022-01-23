@@ -1,9 +1,14 @@
 import {
   Avatar,
   Box,
+  Center,
   Flex,
+  Heading,
   IconButton,
   Image,
+  Input,
+  InputGroup,
+  InputLeftElement,
   Spacer,
   Text,
   useDisclosure,
@@ -11,10 +16,11 @@ import {
 import { parseCookies } from "nookies";
 import { useContext, useEffect, useState } from "react";
 import { api } from "../services/api";
-import { AiOutlineLike, AiOutlineDislike } from "react-icons/ai";
+import { AiOutlineLike, AiOutlineDislike, AiOutlineSearch } from "react-icons/ai";
 import { ImageModal } from "./imageModal/imageModal";
 import { AuthContext } from "../contexts/AuthContext";
 import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
 
 type Author = {
   _id: string;
@@ -39,11 +45,18 @@ type Image = {
   author: Author;
 };
 
-export function GalleryComp({ imageList }: any) {
+export function GalleryComp({ imageList, haveHeader }: any) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [imagesID, setImagesID] = useState();
   const { isAuthenticated } = useContext(AuthContext)
   const router = useRouter()
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+    setValue,
+    reset,
+  } = useForm();
 
   const { "studio.token": token } = parseCookies();
 
@@ -68,17 +81,57 @@ export function GalleryComp({ imageList }: any) {
     }
   };
 
+  const onSubmit = (data: any) => {
+    let tags = data.tags.split(",").join();
+
+    router.push({
+      pathname: "/search",
+      query: {
+        tags,
+      },
+    });
+  };
+
   return (
     <>
-      {/* {haveHeader && (
-        <Image src={"/image.png"} w='100%' h='100%' maxH='700px' alt='image' objectFit={"cover"} />
-      )} */}
+      {haveHeader && (
+        <>
+          <Flex position={"relative"} w="100%" h="700px" justify="center">
+            <Center>
+              <Box zIndex={1000} textAlign={"center"}>
+                <Heading color="#FFF" zIndex={1000} fontSize={"100px"} >
+                  Pelourinho Studio
+                </Heading>
+                <Text color="#FFF" fontSize={"30px"} my="40px">
+                  Melhor Galeria do Mundo!!!
+                </Text>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <InputGroup zIndex={1000}>
+                    <InputLeftElement
+                      pointerEvents='none'
+                      children={<AiOutlineSearch />}
+                    />
+                    <Input
+                      {...register("tags")}
+                      placeholder="Pesquisar por tags, divididas por ','"
+                      bgColor='#E8E8E8'
+                      borderRadius='60px'
+                      w='100%'
+                    />
+                  </InputGroup>
+                </form>
+              </Box>
+            </Center>
+            <Image src={"/image2.jpg"} w='100%' h='100%' alt='image' objectFit={"cover"} position={"absolute"} bgColor={"#000"} style={{ filter: "brightness(0.7)" }} />
+          </Flex>
+        </>
+      )}
       <Box
         padding={4}
         w='100%'
         mx='auto'
         sx={{ columnCount: { base: 1, md: 2, lg: 3, xl: 4 }, columnGap: "2" }}>
-        {imageList.map((image: Image) => {
+        {imageList?.map((image: Image) => {
           // return box with image inside and display image info on hover
           return (
             <>
@@ -107,9 +160,9 @@ export function GalleryComp({ imageList }: any) {
                     },
                   }}>
                   <Flex alignItems='center'>
-                    <Avatar mr='2' src={image.author.avatar} />
+                    <Avatar mr='2' src={image.author?.avatar} />
                     <Text>
-                      {image.author.firstName + " " + image.author.lastName}
+                      {image.author?.firstName + " " + image.author?.lastName}
                     </Text>
                     <Spacer />
 

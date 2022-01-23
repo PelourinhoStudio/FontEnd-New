@@ -48,7 +48,7 @@ export function UploadImageForm() {
   };
 
   const onSubmit = async (data: any) => {
-    data.tags = data.tags.split(",").map((tag: string) => tag.trim());
+    data.tags = data.tags.split(",").map((tag: string) => tag.trim().toLocaleLowerCase());
 
     let imageFiles: any = [data.images][0];
 
@@ -78,7 +78,7 @@ export function UploadImageForm() {
       data.category = categories;
 
       await api
-        .post("/admin/images", data, config)
+        .post("/me/images", data, config)
         .then((res) => {
           toast({
             position: "top-start",

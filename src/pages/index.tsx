@@ -43,7 +43,7 @@ const Home: NextPage = () => {
           </>
         ) : (
           <>
-            <GalleryComp imageList={images} />
+            <GalleryComp imageList={images} haveHeader={true} />
           </>
         )
       }

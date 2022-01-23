@@ -19,7 +19,7 @@ const Favorites: NextPage = () => {
       api.get("/me/images/favorites/", { headers: { "x-access-token": token } })
         .then(
           res => {
-            setImages(res.data.flat()[0].favorites)
+            setImages(res.data.flat()[0]?.favorites)
             setLoaded(true)
           }
         )

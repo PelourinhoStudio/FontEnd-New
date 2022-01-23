@@ -23,7 +23,8 @@ export function RegisterPage() {
             email: data.email,
             firstName: data.firstName,
             lastName: data.lastName,
-            password: data.password
+            password: data.password,
+            avatar: "https://i.ibb.co/Gk7NrCC/avatar.png"
         }
         await api.post('/auth/register', newUser)
             .then(res => {

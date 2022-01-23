@@ -40,9 +40,6 @@ export function Header() {
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting },
-    setValue,
-    reset,
   } = useForm();
   const router = useRouter();
   const { user, isAuthenticated, signOut } = useContext(AuthContext);
@@ -178,14 +175,25 @@ export function Header() {
                           Minha Conta
                         </Text>
                       </Link>
-                      <Link href='/myAccount/uploadImage' passHref>
-                        <Text as='a' onClick={onClose}>
-                          Adicionar Imagem
-                        </Text>
-                      </Link>
+                      {
+                        String(user.userType).toUpperCase() === 'DEFAULT' ? (
+                          <></>
+                        ) : (
+                          <Link href='/myAccount/uploadImage' passHref>
+                            <Text as='a' onClick={onClose}>
+                              Adicionar Imagem
+                            </Text>
+                          </Link>
+                        )
+                      }
                       <Link href='/myAccount/myGallery' passHref>
                         <Text as='a' onClick={onClose}>
                           Minha Galeria
+                        </Text>
+                      </Link>
+                      <Link href='/myAccount/favorites' passHref>
+                        <Text as='a' onClick={onClose}>
+                          Favoritos
                         </Text>
                       </Link>
                       <Link href='/myAccount/myGallery' passHref>
@@ -276,9 +284,15 @@ export function Header() {
                     <Link href='/myAccount/accountDetails' passHref>
                       <MenuItem as='a'><Box as="button">Minha Conta</Box></MenuItem>
                     </Link>
-                    <Link href='/myAccount/uploadImage' passHref>
-                      <MenuItem as='a'>Adicionar Imagem</MenuItem>
-                    </Link>
+                    {
+                      String(user.userType).toUpperCase() === 'DEFAULT' ? (
+                        <></>
+                      ) : (
+                        <Link href='/myAccount/uploadImage' passHref>
+                          <MenuItem as='a'>Adicionar Imagem</MenuItem>
+                        </Link>
+                      )
+                    }
                     <Link href='/myAccount/myGallery' passHref>
                       <MenuItem as='a'>Minha Galeria</MenuItem>
                     </Link>

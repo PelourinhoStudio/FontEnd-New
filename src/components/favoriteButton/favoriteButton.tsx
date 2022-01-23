@@ -15,7 +15,7 @@ export function FavoriteButton({ id }: any) {
     api.get("/me/images/favorites", { headers: { "x-access-token": token } })
       .then(
         res => {
-          res.data.flat()[0].favorites.forEach((image: any) => {
+          res.data.flat()[0]?.favorites.forEach((image: any) => {
             if (image._id == id) {
               setisFavorite(true)
             }
@@ -34,7 +34,7 @@ export function FavoriteButton({ id }: any) {
     })
       .then(res => {
         setisFavorite(!isFavorite)
-      })
+      }).catch(err => console.log(err))
   }
 
   return (
