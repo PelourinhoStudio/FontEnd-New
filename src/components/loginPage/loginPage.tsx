@@ -5,7 +5,9 @@ import {
     Input,
     Text
 } from "@chakra-ui/react";
-import { useContext } from "react";
+import { useRouter } from "next/router";
+import { parseCookies } from "nookies";
+import { useContext, useEffect } from "react";
 import { useForm } from 'react-hook-form'
 import { AuthContext } from "../../contexts/AuthContext";
 
@@ -14,6 +16,14 @@ export function LoginPage() {
 
     const { register, handleSubmit, formState: { isSubmitting } } = useForm()
     const { signIn } = useContext(AuthContext)
+    const { "studio.token": token }: any = parseCookies()
+    const router = useRouter()
+
+    useEffect(() => {
+        if (token) {
+            router.push('/')
+        }
+    }, [])
 
     async function handleSignIn(data: any) {
         await signIn(data)

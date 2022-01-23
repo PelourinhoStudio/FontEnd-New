@@ -103,7 +103,7 @@ export function UploadImageForm() {
     <>
       <Flex direction='column' alignItems='center'>
         <Text fontWeight='bold' fontSize='40px' h='15%'>
-          Upload
+          Adicionar Imagens
         </Text>
         <form onSubmit={handleSubmit(onSubmit)}>
           <VStack spacing={8} justify={"center"} h="calc(80vh - 124px)">

@@ -98,6 +98,15 @@ export function Header() {
     },
   });
 
+  const [refWide] = useKeenSlider<HTMLDivElement>({
+    mode: "free",
+    loop: true,
+    slides: {
+      perView: 2,
+      origin: 'center'
+    },
+  });
+
   const wide = useBreakpointValue({
     base: false,
     lg: true,
@@ -142,17 +151,20 @@ export function Header() {
                 Pelourinho Studio
               </DrawerHeader>
               <DrawerBody>
-                <InputGroup>
-                  <InputLeftElement
-                    pointerEvents='none'
-                    children={<AiOutlineSearch />}
-                  />
-                  <Input
-                    placeholder='Search something...'
-                    bgColor='#E8E8E8'
-                    borderRadius='60px'
-                  />
-                </InputGroup>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <InputGroup>
+                    <InputLeftElement
+                      pointerEvents='none'
+                      children={<AiOutlineSearch />}
+                    />
+                    <Input
+                      {...register("tags")}
+                      placeholder="Pesquisar por tags, divididas por ','"
+                      bgColor='#E8E8E8'
+                      borderRadius='60px'
+                    />
+                  </InputGroup>
+                </form>
                 {isAuthenticated ? (
                   <>
                     <Stack
@@ -176,62 +188,42 @@ export function Header() {
                           Minha Galeria
                         </Text>
                       </Link>
+                      <Link href='/myAccount/myGallery' passHref>
+                        <Text as='a' onClick={signOut}>
+                          Sair
+                        </Text>
+                      </Link>
                     </Stack>
                   </>
                 ) : (
-                  <></>
-                )}
-              </DrawerBody>
-              <DrawerFooter>
-                {isAuthenticated ? (
                   <>
-                    <Flex align={"center"} w='100%'>
-                      <Flex align={"center"}>
-                        <Avatar m='6px' name={user.avatar} src={user.avatar} />
-                        <Text>{user.firstName + " " + user.lastName}</Text>
-                      </Flex>
-
-                      <Portal>
-                        <MenuList zIndex={1000}>
-                          <MenuItem as='a'>
-                            <Box
-                              as={"button"}
-                              onClick={() =>
-                                router.push(`/myAccount/accountDetails`)
-                              }>
-                              Minha Conta
-                            </Box>
-                          </MenuItem>
-                          <Link href='/myAccount/uploadImage' passHref>
-                            <MenuItem as='a'>Adicionar Imagem</MenuItem>
-                          </Link>
-                          <Link href='/myAccount/myGallery' passHref>
-                            <MenuItem as='a'>Minha Galeria</MenuItem>
-                          </Link>
-                          <Link href='/myAccount/favorites' passHref>
-                            <MenuItem as='a'>Favoritos</MenuItem>
-                          </Link>
-                          <MenuItem as='button' onClick={signOut}>
-                            Sair
-                          </MenuItem>
-                        </MenuList>
-                      </Portal>
-                    </Flex>
-                  </>
-                ) : (
-                  <>
-                    <Flex w='100%' justify={"flex-end"}>
+                    <Flex w='100%' my="20px" justify="center">
                       <Link href='/login' passHref>
-                        <Text cursor='pointer' px='20px'>
+                        <Text cursor='pointer' px='20px' as="a" onClick={onClose}>
                           Login
                         </Text>
                       </Link>
                       <Link href='/register' passHref>
-                        <Text cursor='pointer'>Register</Text>
+                        <Text cursor='pointer' as="a" onClick={onClose}>Register</Text>
                       </Link>
                     </Flex>
                   </>
                 )}
+              </DrawerBody>
+              <DrawerFooter>
+                <Flex mt='8px' w="100%" onClick={onClose}>
+                  <div ref={refWide} className='keen-slider'>
+                    {categoriesArray.map((category: any) => (
+                      <Link href={`/category/${category}`}>
+                        <div
+                          className='keen-slider__slide number-slide1'
+                          style={{ textTransform: "capitalize", cursor: "pointer" }}>
+                          {category}
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </Flex>
               </DrawerFooter>
             </DrawerContent>
           </Drawer>
@@ -261,7 +253,7 @@ export function Header() {
                   />
                   <Input
                     {...register("tags")}
-                    placeholder="Pesquisar por tags, divididades por ','"
+                    placeholder="Pesquisar por tags, divididas por ','"
                     bgColor='#E8E8E8'
                     borderRadius='60px'
                     w='500px'
@@ -282,7 +274,7 @@ export function Header() {
                 <Portal>
                   <MenuList zIndex={1000}>
                     <Link href='/myAccount/accountDetails' passHref>
-                      <MenuItem as='a'>Minha Conta</MenuItem>
+                      <MenuItem as='a'><Box as="button">Minha Conta</Box></MenuItem>
                     </Link>
                     <Link href='/myAccount/uploadImage' passHref>
                       <MenuItem as='a'>Adicionar Imagem</MenuItem>

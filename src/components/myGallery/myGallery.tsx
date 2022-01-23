@@ -1,32 +1,31 @@
 import { Center, Flex, Heading, Spinner } from "@chakra-ui/react";
-import { NextPage } from "next";
-import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
-import { GalleryComp } from "../components/GalleryComp";
-import { api } from "../services/api";
+import { api } from "../../services/api";
+import { GalleryComp } from "../GalleryComp";
 
 
-const Favorites: NextPage = () => {
+export function MyGallery() {
 
-  const [images, setImages] = useState([])
-  const { "studio.token": token }: any = parseCookies()
-  const router = useRouter()
+  const [images, setImages] = useState([]);
+  const { "studio.token": token } = parseCookies();
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    if (token) {
-      api.get("/me/images/favorites/", { headers: { "x-access-token": token } })
-        .then(
-          res => {
-            setImages(res.data.flat()[0].favorites)
-            setLoaded(true)
-          }
-        )
-    } else {
-      router.push('/')
-    }
-  }, [])
+    api
+      .get("/me/images", {
+        headers: {
+          "x-access-token": token,
+        },
+      })
+      .then((response) => {
+        setImages(response.data)
+        setLoaded(true)
+      })
+      .catch((err) => {
+        console.error("ops! ocorreu um erro " + err);
+      });
+  }, []);
 
   return (
     <>
@@ -49,8 +48,8 @@ const Favorites: NextPage = () => {
         ) : (
           <>
             <Center>
-              <Heading textTransform={"capitalize"}>Favoritos</Heading>
-            </Center>
+              <Heading textTransform={"capitalize"}>Minha Galeria</Heading>
+            </Center >
             <GalleryComp imageList={images} />
           </>
         )
@@ -58,5 +57,3 @@ const Favorites: NextPage = () => {
     </>
   )
 }
-
-export default Favorites

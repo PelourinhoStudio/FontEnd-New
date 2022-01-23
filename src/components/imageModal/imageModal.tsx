@@ -25,6 +25,7 @@ export function ImageModal({ isOpen, open, onClose, id }: any) {
   const [tags, setTags]: any = useState([]);
   const [categories, setCategories]: any = useState([]);
   const { isAuthenticated } = useContext(AuthContext)
+  console.log(image)
 
   useEffect(() => {
     if (isOpen != false) {
@@ -54,12 +55,9 @@ export function ImageModal({ isOpen, open, onClose, id }: any) {
             />
           </Center>
           <Flex mx='20px' mt='20px' justify='space-between'>
-            <Flex>
-              <Avatar src='https://github.com/diogosousa17.png' />
-              <Box mx='10px'>
-                <Text fontWeight='medium'>Diogo Sousa</Text>
-                <Text fontSize='small'>Designer</Text>
-              </Box>
+            <Flex align="center">
+              <Avatar src={image.author?.avatar} />
+              <Text fontWeight='medium' mx="10px">{image.author?.firstName + " " + image.author?.lastName}</Text>
             </Flex>
             {
               isAuthenticated ? (

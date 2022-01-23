@@ -1,4 +1,7 @@
 import { Button, Center, Flex, Input, Text, useToast } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { parseCookies } from "nookies";
+import { useEffect } from "react";
 import { useForm } from 'react-hook-form'
 import { api } from "../../services/api";
 
@@ -6,6 +9,14 @@ export function RegisterPage() {
 
     const toast = useToast()
     const { register, handleSubmit, formState: { isSubmitting } } = useForm()
+    const { "studio.token": token }: any = parseCookies()
+    const router = useRouter()
+
+    useEffect(() => {
+        if (token) {
+            router.push('/')
+        }
+    }, [])
 
     const onSubmit = async (data: any) => {
         const newUser = {

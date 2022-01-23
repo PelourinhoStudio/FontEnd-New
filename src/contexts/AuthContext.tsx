@@ -76,7 +76,8 @@ export function AuthProvider({ children }: any) {
 
     function signOut() {
         destroyCookie(undefined, 'studio.token')
-        window.location.reload()
+        router.reload()
+        router.push('/')
     }
 
     return (

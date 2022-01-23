@@ -10,17 +10,20 @@ import {
     useToast,
     VStack
 } from "@chakra-ui/react";
+import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { AuthContext } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
 import { ref, storage, uploadBytesResumable, getDownloadURL } from "../../services/firebase";
-
 
 export function AccountDetails() {
 
     const { register, handleSubmit, formState: { isSubmitting } } = useForm()
     const { 'studio.token': token } = parseCookies()
     const toast = useToast()
+    const { user } = useContext(AuthContext)
 
     const onSubmit = async (data: any) => {
         const storageRef = ref(storage, "avatar/" + data.avatar[0].name)
@@ -41,7 +44,7 @@ export function AccountDetails() {
                     toast({
                         position: 'top-start',
                         isClosable: true,
-                        title: 'Dados alterado com sucesso!',
+                        title: 'Dados alterados com sucesso!',
                         status: 'success',
                     })
                 }).catch(err => {
@@ -58,19 +61,28 @@ export function AccountDetails() {
 
     return (
         <>
-            <Text fontWeight="bold" fontSize="40px" h="15%" textAlign={"center"}>Account Settings</Text>
+            <Text fontWeight="bold" fontSize="40px" h="15%" textAlign={"center"}>Definições de Conta</Text>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <VStack h="calc(80vh - 124px)" justify="center">
                     <Avatar
-                        src={"https://github.com/diogosousa17.png"}
+                        src={user?.avatar}
                         size={"2xl"}
                     />
-                    <HStack>
+                    <FormControl w="500px">
+                        <FormLabel>Alterar Avatar</FormLabel>
+                        <Input
+                            boxShadow='rgba(0, 0, 0, 0.16) 0px 1px 4px'
+                            {...register("avatar")}
+                            type="file"
+                        />
+                    </FormControl>
+                    <HStack w="500px">
                         <FormControl>
                             <FormLabel>Primeiro Nome</FormLabel>
                             <Input
                                 boxShadow='rgba(0, 0, 0, 0.16) 0px 1px 4px'
                                 {...register("firstName")}
+                                defaultValue={user?.firstName}
                             />
                         </FormControl>
                         <FormControl>
@@ -78,23 +90,17 @@ export function AccountDetails() {
                             <Input
                                 boxShadow='rgba(0, 0, 0, 0.16) 0px 1px 4px'
                                 {...register("lastName")}
+                                defaultValue={user?.lastName}
                             />
                         </FormControl>
                     </HStack>
-                    <HStack>
+                    <HStack w="500px">
                         <FormControl>
                             <FormLabel>Email</FormLabel>
                             <Input
                                 boxShadow='rgba(0, 0, 0, 0.16) 0px 1px 4px'
                                 {...register("email")}
-                            />
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>Alterar Avatar</FormLabel>
-                            <Input
-                                boxShadow='rgba(0, 0, 0, 0.16) 0px 1px 4px'
-                                type="file"
-                                {...register("avatar")}
+                                defaultValue={user?.email}
                             />
                         </FormControl>
                     </HStack>
